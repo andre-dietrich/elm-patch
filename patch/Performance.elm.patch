@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/Performance.elm
-@@ -0,0 +1,108 @@
+@@ -0,0 +1,120 @@
 +module Performance exposing
 +    ( clearMark
 +    , clearMarks
@@ -9,6 +9,18 @@
 +    , mark
 +    , measure
 +    )
++
++{-| This module wraps the browser's Performance API for marking and measuring
++timings on the performance timeline. It is not available for use in packages
++or production.
++
++# Marking
++@docs mark, measure
++
++# Clearing
++@docs clearMark, clearMarks, clearMeasure, clearMeasures
++-}
++
 +
 +import Elm.Kernel.Performance
 +import String exposing (String)

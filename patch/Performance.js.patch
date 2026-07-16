@@ -1,6 +1,11 @@
 --- /dev/null
 +++ b/Elm/Kernel/Performance.js
-@@ -0,0 +1,184 @@
+@@ -0,0 +1,189 @@
++/*
++
++*/
++
++
 +// MARK
 +
 +
