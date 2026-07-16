@@ -1,0 +1,111 @@
+--- /dev/null
++++ b/Performance.elm
+@@ -0,0 +1,108 @@
++module Performance exposing
++    ( clearMark
++    , clearMarks
++    , clearMeasure
++    , clearMeasures
++    , mark
++    , measure
++    )
++
++import Elm.Kernel.Performance
++import String exposing (String)
++
++
++{-| Create a named marker in the browser's performance timeline and return
++the value unchanged.
++
++Marks represent individual points in time. Their names are arbitrary, so
++suffixes such as `-start` and `-end` are only naming conventions.
++
++    model
++        |> Performance.mark "update-start"
++        |> updateModel
++        |> Performance.mark "update-end"
++
++Use [`measure`](#measure) to calculate the duration between two marks.
++
++-}
++mark : String -> value -> value
++mark =
++    Elm.Kernel.Performance.mark
++
++
++{-| Measure the duration between two previously created marks and return the
++value unchanged.
++
++The first argument names the resulting measurement. The second and third
++arguments identify the start and end marks.
++
++    model
++        |> Performance.mark "update-start"
++        |> updateModel
++        |> Performance.mark "update-end"
++        |> Performance.measure
++            "update"
++            "update-start"
++            "update-end"
++
++The measurement is added to the browser's performance timeline. It can be
++inspected in the browser's developer tools or retrieved through the JavaScript
++Performance API.
++
++The start and end marks must already exist when this function is called.
++
++-}
++measure : String -> String -> String -> value -> value
++measure =
++    Elm.Kernel.Performance.measure
++
++
++{-| Remove all marks with the given name from the performance timeline and
++return the value unchanged.
++
++    model
++        |> Performance.clearMark "update-start"
++
++Removing a mark does not automatically remove measurements that were already
++created from it.
++
++-}
++clearMark : String -> value -> value
++clearMark =
++    Elm.Kernel.Performance.clearMark
++
++
++{-| Remove all marks from the performance timeline and return the value
++unchanged.
++
++    model
++        |> Performance.clearMarks
++
++-}
++clearMarks : value -> value
++clearMarks =
++    Elm.Kernel.Performance.clearMarks
++
++
++{-| Remove all measurements with the given name from the performance timeline
++and return the value unchanged.
++
++    model
++        |> Performance.clearMeasure "update"
++
++-}
++clearMeasure : String -> value -> value
++clearMeasure =
++    Elm.Kernel.Performance.clearMeasure
++
++
++{-| Remove all measurements from the performance timeline and return the value
++unchanged.
++
++    model
++        |> Performance.clearMeasures
++
++-}
++clearMeasures : value -> value
++clearMeasures =
++    Elm.Kernel.Performance.clearMeasures

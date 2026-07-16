@@ -1,0 +1,214 @@
+--- a/Debug.elm
++++ b/Debug.elm
+@@ -2,6 +2,11 @@
+   ( toString
+   , log
+   , todo
++  , time
++  , timeLog
++  , timeEnd
++  , profile
++  , profileEnd
+   )
+ 
+ {-| This module can be useful while _developing_ an application. It is not
+@@ -9,6 +14,11 @@
+ 
+ # Debugging
+ @docs toString, log, todo
++
++## Timing
++@docs time, timeLog, timeEnd
++## Profiling
++@docs profile, profileEnd
+ -}
+ 
+ 
+@@ -95,3 +105,187 @@
+ todo =
+   Elm.Kernel.Debug.todo
+ 
++{-| Start a named timer in the developer console, and then return the value
++unchanged.
++
++```
++expensiveValue
++  |> time "calculation"
++  |> calculate
++  |> timeEnd "calculation"
++```
++
++This makes it possible to insert timing measurements into pipelines without
++changing the resulting value. The timer continues running until a matching
++[`timeEnd`](#timeEnd) call uses the same label.
++
++You can use [`timeLog`](#timeLog) to print intermediate measurements without
++stopping the timer.
++
++```
++value
++  |> time "render"
++  |> prepare
++  |> timeLog "render"
++  |> draw
++  |> timeEnd "render"
++```
++
++Timer labels should be unique while a timer is running. Starting another timer
++with the same label may produce a warning in the developer console.
++
++**Note:** This is intended for development and debugging. It is not available
++with `elm make --optimize` because it performs an observable side effect whose
++behavior could become unpredictable when compiler optimizations move or remove
++code.
++-}
++time : String -> value -> value
++time =
++  Elm.Kernel.Debug.time
++
++{-| Log the current duration of a named timer in the developer console, and
++then return the value unchanged.
++
++The timer must first be started with [`time`](#time) using the same label.
++
++```
++value
++  |> time "loading"
++  |> loadMetadata
++  |> timeLog "loading"
++  |> loadContent
++  |> timeEnd "loading"
++```
++
++Calling `timeLog` does not stop or reset the timer, so it can be used multiple
++times to inspect intermediate timings.
++
++```
++value
++  |> time "process"
++  |> firstStep
++  |> timeLog "process" "message after first step"
++  |> secondStep
++  |> timeLog "process" "message after second step"
++  |> finalStep
++  |> timeEnd "process"
++```
++
++The current Elm value may also be displayed alongside the elapsed time,
++depending on the runtime implementation.
++
++**Note:** This is intended for development and debugging. It is not available
++with `elm make --optimize` because it performs an observable side effect whose
++behavior could become unpredictable when compiler optimizations move or remove
++code.
++-}
++timeLog : String -> String -> value -> value
++timeLog =
++  Elm.Kernel.Debug.timeLog
++
++{-| Stop a named timer, log its total duration in the developer console, and
++then return the value unchanged.
++
++The timer must first be started with [`time`](#time) using the same label.
++
++```
++result =
++  input
++    |> time "parse"
++    |> parse
++    |> timeEnd "parse"
++```
++
++After `timeEnd` is called, the timer with that label is removed and the same
++label can be used to start a new measurement.
++
++```
++firstResult =
++  firstInput
++    |> time "operation"
++    |> calculate
++    |> timeEnd "operation"
++
++secondResult =
++  secondInput
++    |> time "operation"
++    |> calculate
++    |> timeEnd "operation"
++```
++
++Calling `timeEnd` without a matching timer may produce a warning in the
++developer console.
++
++**Note:** This is intended for development and debugging. It is not available
++with `elm make --optimize` because it performs an observable side effect whose
++behavior could become unpredictable when compiler optimizations move or remove
++code.
++-}
++timeEnd : String -> value -> value
++timeEnd =
++  Elm.Kernel.Debug.timeEnd
++
++{-| Start a named CPU profile in the developer tools, and then return the value
++unchanged.
++
++```
++value
++  |> profile "expensive calculation"
++  |> calculate
++  |> profileEnd "expensive calculation"
++```
++
++Unlike [`time`](#time), which only measures the total elapsed duration, a CPU
++profile can show which JavaScript functions used the most processing time
++during the recorded section.
++
++The resulting profile is normally available in the performance or profiler
++panel of the developer tools. Exact behavior and availability depend on the
++browser or JavaScript runtime.
++
++Profiles should always be paired with a matching [`profileEnd`](#profileEnd)
++call using the same label.
++
++**Note:** Profiling is not supported by every developer console. On unsupported
++platforms, this function may have no visible effect.
++
++**Note:** This is intended for development and debugging. It is not available
++with `elm make --optimize` because it performs an observable side effect whose
++behavior could become unpredictable when compiler optimizations move or remove
++code.
++-}
++profile : String -> value -> value
++profile =
++  Elm.Kernel.Debug.profile
++
++{-| Stop a named CPU profile in the developer tools, and then return the value
++unchanged.
++
++The profile must first be started with [`profile`](#profile) using the same
++label.
++
++```
++decoded =
++  bytes
++    |> profile "decode"
++    |> decode
++    |> profileEnd "decode"
++```
++
++After the profile is stopped, the developer tools can display information such
++as function call counts, call stacks, and the amount of CPU time spent in
++different parts of the generated JavaScript.
++
++Exact results and presentation depend on the browser or JavaScript runtime.
++
++**Note:** Profiling is not supported by every developer console. On unsupported
++platforms, this function may have no visible effect.
++
++**Note:** This is intended for development and debugging. It is not available
++with `elm make --optimize` because it performs an observable side effect whose
++behavior could become unpredictable when compiler optimizations move or remove
++code.
++-}
++profileEnd : String -> value -> value
++profileEnd =
++  Elm.Kernel.Debug.profileEnd

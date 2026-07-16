@@ -1,0 +1,187 @@
+--- /dev/null
++++ b/Elm/Kernel/Performance.js
+@@ -0,0 +1,184 @@
++// MARK
++
++
++var _Performance_mark__DEBUG = F2(function(name, value)
++{
++	if (
++		typeof performance !== 'undefined'
++		&& typeof performance.mark === 'function'
++	)
++	{
++		performance.mark(name);
++	}
++
++	return value;
++});
++
++
++var _Performance_mark__PROD = F2(function(name, value)
++{
++	if (
++		typeof performance !== 'undefined'
++		&& typeof performance.mark === 'function'
++	)
++	{
++		performance.mark(name);
++	}
++
++	return value;
++});
++
++
++// MEASURE
++
++
++var _Performance_measure__DEBUG = F4(function(name, startMark, endMark, value)
++{
++	if (
++		typeof performance !== 'undefined'
++		&& typeof performance.measure === 'function'
++	)
++	{
++		performance.measure(name, startMark, endMark);
++	}
++
++	return value;
++});
++
++
++var _Performance_measure__PROD = F4(function(name, startMark, endMark, value)
++{
++	if (
++		typeof performance !== 'undefined'
++		&& typeof performance.measure === 'function'
++	)
++	{
++		performance.measure(name, startMark, endMark);
++	}
++
++	return value;
++});
++
++
++// CLEAR MARK
++
++
++var _Performance_clearMark__DEBUG = F2(function(name, value)
++{
++	if (
++		typeof performance !== 'undefined'
++		&& typeof performance.clearMarks === 'function'
++	)
++	{
++		performance.clearMarks(name);
++	}
++
++	return value;
++});
++
++
++var _Performance_clearMark__PROD = F2(function(name, value)
++{
++	if (
++		typeof performance !== 'undefined'
++		&& typeof performance.clearMarks === 'function'
++	)
++	{
++		performance.clearMarks(name);
++	}
++
++	return value;
++});
++
++
++// CLEAR ALL MARKS
++
++
++function _Performance_clearMarks__DEBUG(value)
++{
++	if (
++		typeof performance !== 'undefined'
++		&& typeof performance.clearMarks === 'function'
++	)
++	{
++		performance.clearMarks();
++	}
++
++	return value;
++}
++
++
++function _Performance_clearMarks__PROD(value)
++{
++	if (
++		typeof performance !== 'undefined'
++		&& typeof performance.clearMarks === 'function'
++	)
++	{
++		performance.clearMarks();
++	}
++
++	return value;
++}
++
++
++// CLEAR MEASURE
++
++
++var _Performance_clearMeasure__DEBUG = F2(function(name, value)
++{
++	if (
++		typeof performance !== 'undefined'
++		&& typeof performance.clearMeasures === 'function'
++	)
++	{
++		performance.clearMeasures(name);
++	}
++
++	return value;
++});
++
++
++var _Performance_clearMeasure__PROD = F2(function(name, value)
++{
++	if (
++		typeof performance !== 'undefined'
++		&& typeof performance.clearMeasures === 'function'
++	)
++	{
++		performance.clearMeasures(name);
++	}
++
++	return value;
++});
++
++
++// CLEAR ALL MEASURES
++
++
++function _Performance_clearMeasures__DEBUG(value)
++{
++	if (
++		typeof performance !== 'undefined'
++		&& typeof performance.clearMeasures === 'function'
++	)
++	{
++		performance.clearMeasures();
++	}
++
++	return value;
++}
++
++
++function _Performance_clearMeasures__PROD(value)
++{
++	if (
++		typeof performance !== 'undefined'
++		&& typeof performance.clearMeasures === 'function'
++	)
++	{
++		performance.clearMeasures();
++	}
++
++	return value;
++}

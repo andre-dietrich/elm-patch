@@ -16,6 +16,16 @@ This projects contains two patches:
   
 * `patch/VirtualDom.js.patch`: allows to add `onclick` events and `innerHtml`
 
+* `patch/Debug.elm.patch` and `patch/Debug.js.patch`: extends `Debug` with
+  `time`, `timeLog`, `timeEnd`, `profile`, and `profileEnd`, for timing and
+  CPU-profiling values inline in a pipeline
+
+* `patch/Performance.elm.patch`, `patch/Performance.js.patch`, and
+  `patch/CoreElmJson.patch`: adds a new `Performance` module (`mark`,
+  `measure`, `clearMark`, `clearMarks`, `clearMeasure`, `clearMeasures`)
+  backed by the browser's `Performance` API, and exposes it in `elm/core`'s
+  `elm.json` so it can be imported
+
 ## Usage
 
 If you are on Linux, a simple `make` should do the job, then simply remove the

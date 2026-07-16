@@ -1,0 +1,12 @@
+--- a/elm.json
++++ b/elm.json
+@@ -25,6 +25,9 @@
+         "Debug": [
+             "Debug"
+         ],
++        "Performance": [
++            "Performance"
++        ],
+         "Effects": [
+             "Platform.Cmd",
+             "Platform.Sub",

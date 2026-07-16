@@ -1,0 +1,78 @@
+--- a/Elm/Kernel/Debug.js
++++ b/Elm/Kernel/Debug.js
+@@ -20,6 +20,75 @@
+ 	return value;
+ });
+ 
++// TIME
++
++var _Debug_time__PROD = F2(function(tag, value)
++{
++	return value;
++});
++
++var _Debug_time__DEBUG = F2(function(tag, value)
++{
++	console.log(tag + ': 0ms - Timer start');
++	console.time(tag);
++	return value;
++});
++
++
++var _Debug_timeLog__PROD = F3(function(tag, msg, value)
++{
++	return value;
++});
++
++var _Debug_timeLog__DEBUG = F3(function(tag, msg, value)
++{
++	console.timeLog(tag, msg);
++	return value;
++});
++
++
++var _Debug_timeEnd__PROD = F2(function(tag, value)
++{
++	return value;
++});
++
++var _Debug_timeEnd__DEBUG = F2(function(tag, value)
++{
++	console.timeEnd(tag);
++	return value;
++});
++
++
++// PROFILE
++
++var _Debug_profile__PROD = F2(function(tag, value)
++{
++	return value;
++});
++
++var _Debug_profile__DEBUG = F2(function(tag, value)
++{
++	if (typeof console.profile === 'function')
++	{
++		console.profile(tag);
++	}
++	return value;
++});
++
++
++var _Debug_profileEnd__PROD = F2(function(tag, value)
++{
++	return value;
++});
++
++var _Debug_profileEnd__DEBUG = F2(function(tag, value)
++{
++	if (typeof console.profileEnd === 'function')
++	{
++		console.profileEnd(tag);
++	}
++	return value;
++});
+ 
+ // TODOS
+ 
