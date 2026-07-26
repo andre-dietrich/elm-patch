@@ -3,10 +3,21 @@ ELM_HOME ?= ~/.elm
 
 .PHONY: all
 
-all: echo_elm_home Url VirtualDom BreakVirtualDom Debug Performance
+all: echo_elm_home Url VirtualDom BreakVirtualDom Debug Performance Regex SchedulerQueue
 
 echo_elm_home:
 	echo "ELM_HOME is set to $(ELM_HOME)"
+
+Regex:
+	rm -f $(ELM_HOME)/0.19.1/packages/elm/regex/1.0.0/artifacts.dat
+	rm -f $(ELM_HOME)/0.19.1/packages/elm/regex/1.0.0/docs.json
+	patch -uN $(ELM_HOME)/0.19.1/packages/elm/regex/1.0.0/src/Elm/Kernel/Regex.js patch/Regex.js.patch
+
+SchedulerQueue:
+	rm -f $(ELM_HOME)/0.19.1/packages/elm/core/1.0.5/artifacts.dat
+	rm -f $(ELM_HOME)/0.19.1/packages/elm/core/1.0.5/docs.json
+	patch -uN $(ELM_HOME)/0.19.1/packages/elm/core/1.0.5/src/Elm/Kernel/Scheduler.js patch/Scheduler.js.patch
+	patch -uN $(ELM_HOME)/0.19.1/packages/elm/core/1.0.5/src/Elm/Kernel/Platform.js patch/Platform.js.patch
 
 Debug:
 	rm -f $(ELM_HOME)/0.19.1/packages/elm/core/1.0.5/artifacts.dat

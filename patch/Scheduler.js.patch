@@ -1,0 +1,33 @@
+diff --git a/Elm/Kernel/Scheduler.js b/Elm/Kernel/Scheduler.js
+index 37a68be..39bd09e 100644
+--- a/Elm/Kernel/Scheduler.js
++++ b/Elm/Kernel/Scheduler.js
+@@ -130,6 +130,11 @@ type alias Process =
+ 
+ var _Scheduler_working = false;
+ var _Scheduler_queue = [];
++// `Array.shift()` is O(n) (all remaining elements are moved down), so
++// draining a queue that briefly holds n processes (e.g. n processes spawned
++// at once) costs O(n^2) overall. Track a head index into `_Scheduler_queue`
++// instead and only pay for a single length reset once the queue is drained.
++var _Scheduler_queueHead = 0;
+ 
+ 
+ function _Scheduler_enqueue(proc)
+@@ -140,10 +145,15 @@ function _Scheduler_enqueue(proc)
+ 		return;
+ 	}
+ 	_Scheduler_working = true;
+-	while (proc = _Scheduler_queue.shift())
++	while (_Scheduler_queueHead < _Scheduler_queue.length)
+ 	{
++		proc = _Scheduler_queue[_Scheduler_queueHead];
++		_Scheduler_queue[_Scheduler_queueHead] = null;
++		_Scheduler_queueHead++;
+ 		_Scheduler_step(proc);
+ 	}
++	_Scheduler_queue.length = 0;
++	_Scheduler_queueHead = 0;
+ 	_Scheduler_working = false;
+ }
+ 

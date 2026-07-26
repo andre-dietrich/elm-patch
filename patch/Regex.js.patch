@@ -1,0 +1,51 @@
+diff --git a/Elm/Kernel/Regex.js b/Elm/Kernel/Regex.js
+index 1a2077b..a4f9b65 100644
+--- a/Elm/Kernel/Regex.js
++++ b/Elm/Kernel/Regex.js
+@@ -10,20 +10,44 @@ import Regex exposing (Match)
+ 
+ var _Regex_never = /.^/;
+ 
++// Compiling a RegExp is not free (parsing + native regex-engine bytecode
++// generation). Elm has no way to hoist a `Regex.fromString` call out of a
++// function on its own, so code that (accidentally or by necessity) calls
++// `fromString`/`fromStringWith` repeatedly with the same pattern+options
++// pays that cost on every single call. Cache by (flags, pattern) so repeated
++// calls reuse the already-compiled RegExp instead of recompiling it.
++//
++// Caveat: cached RegExp instances are shared, mutable objects (`lastIndex`).
++// `find`/`split` already save+restore `lastIndex` around their exec loops,
++// so this is safe for normal (non-reentrant) usage -- the same safety
++// property a hand-written top-level `Regex.Regex` constant already has,
++// since that too is a single shared instance used everywhere.
++var _Regex_cache = {};
++
+ var _Regex_fromStringWith = F2(function(options, string)
+ {
+ 	var flags = 'g';
+ 	if (options.__$multiline) { flags += 'm'; }
+ 	if (options.__$caseInsensitive) { flags += 'i'; }
+ 
++	var key = flags + ' ' + string;
++	var cached = _Regex_cache[key];
++	if (cached !== undefined)
++	{
++		return cached;
++	}
++
++	var result;
+ 	try
+ 	{
+-		return __Maybe_Just(new RegExp(string, flags));
++		result = __Maybe_Just(new RegExp(string, flags));
+ 	}
+ 	catch(error)
+ 	{
+-		return __Maybe_Nothing;
++		result = __Maybe_Nothing;
+ 	}
++	_Regex_cache[key] = result;
++	return result;
+ });
+ 
+ 

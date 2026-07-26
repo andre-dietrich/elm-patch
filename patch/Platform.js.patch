@@ -1,0 +1,31 @@
+diff --git a/Elm/Kernel/Platform.js b/Elm/Kernel/Platform.js
+index d3cf8db..d4145cc 100644
+--- a/Elm/Kernel/Platform.js
++++ b/Elm/Kernel/Platform.js
+@@ -236,6 +236,9 @@ var _Platform_map = F2(function(tagger, bag)
+ // So you could get queue jumping in a really tricky category of cases.
+ //
+ var _Platform_effectsQueue = [];
++// see the analogous _Scheduler_queueHead comment in Elm/Kernel/Scheduler.js:
++// `Array.shift()` is O(n), a head index turns draining into O(1) per item.
++var _Platform_effectsQueueHead = 0;
+ var _Platform_effectsActive = false;
+ 
+ 
+@@ -246,10 +249,15 @@ function _Platform_enqueueEffects(managers, cmdBag, subBag)
+ 	if (_Platform_effectsActive) return;
+ 
+ 	_Platform_effectsActive = true;
+-	for (var fx; fx = _Platform_effectsQueue.shift(); )
++	while (_Platform_effectsQueueHead < _Platform_effectsQueue.length)
+ 	{
++		var fx = _Platform_effectsQueue[_Platform_effectsQueueHead];
++		_Platform_effectsQueue[_Platform_effectsQueueHead] = null;
++		_Platform_effectsQueueHead++;
+ 		_Platform_dispatchEffects(fx.__managers, fx.__cmdBag, fx.__subBag);
+ 	}
++	_Platform_effectsQueue.length = 0;
++	_Platform_effectsQueueHead = 0;
+ 	_Platform_effectsActive = false;
+ }
+ 
